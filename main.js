@@ -34,7 +34,7 @@ wss.on("connection", function (ws, req) {
       console.log('keepAlive');
       return;
     }
-    broadcast(ws, stringifiedData, true);
+    broadcast(ws, stringifiedData, false);
   });
 
   ws.on("close", (data) => {
@@ -71,7 +71,7 @@ const broadcast = (ws, message, includeSelf) => {
   keepAliveId = setInterval(() => {
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send('ping');
+        client.send('{ping}');
       }
     });
   }, 5000);
@@ -79,5 +79,5 @@ const broadcast = (ws, message, includeSelf) => {
 
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send(`Clientes: ${wss.clients.size}`);
 });
